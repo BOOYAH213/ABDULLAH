@@ -4,11 +4,14 @@
 window.SUPABASE_URL = "https://qtrmgbpwlvubqqrpbqkr.supabase.co";
 window.SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF0cm1nYnB3bHZ1YnFxcnBicWtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ4MzkwODcsImV4cCI6MjExMDQxNTA4N30.oqCvWhcIfyQpeEthT35GBQ8McVLndmOw41NRnUU9nXA";
 
-// Load the FAQ chatbot on the published site.
+// Explicit GitHub Pages project paths avoid loading the assets from the wrong URL.
 const chatbotStyles = document.createElement("link");
 chatbotStyles.rel = "stylesheet";
-chatbotStyles.href = "chatbot.css?v=2";
+chatbotStyles.href = "/ABDULLAH/chatbot.css?v=3";
 document.head.appendChild(chatbotStyles);
+
 const chatbotScript = document.createElement("script");
-chatbotScript.src = "chatbot.js?v=2";
+chatbotScript.src = "/ABDULLAH/chatbot.js?v=3";
+chatbotScript.async = false;
+chatbotScript.onerror = () => console.error("Chatbot failed to load:", chatbotScript.src);
 document.body.appendChild(chatbotScript);
