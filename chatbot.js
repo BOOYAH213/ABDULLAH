@@ -1,5 +1,4 @@
 (() => {
-  // Render the widget even if Supabase is unavailable; FAQ replies work locally.
   const url = window.SUPABASE_URL;
   const key = window.SUPABASE_ANON_KEY;
   const supabaseLib = window.supabase;
@@ -25,68 +24,110 @@
     } catch { return `${Date.now()}-${Math.random().toString(36).slice(2)}`; }
   })();
 
-  const widget = text("div", "chat-widget");
-  const toggle = text("button", "chat-toggle", "اسألني");
-  toggle.type = "button";
-  toggle.setAttribute("aria-expanded", "false");
-  const panel = text("section", "chat-panel");
-  panel.hidden = true;
-  panel.setAttribute("aria-label", "محادثة المساعد");
-  const header = text("div", "chat-head", "مساعد عبدالله");
-  const messages = text("div", "chat-messages");
-  messages.setAttribute("aria-live", "polite");
-  const notice = text("div", "chat-notice", "قد تُحفظ رسائلك ليتمكن صاحب الموقع من مراجعتها. لا ترسل معلومات حساسة.");
-  const status = text("div", "chat-status");
-  const form = text("form", "chat-form");
-  const input = document.createElement("input");
-  input.type = "text";
+  let toggle = document.getElementById("chatToggle");
+  let panel = document.getElementById("chatPanel");
+  let messages = document.getElementById("chatMessages");
+  let form = document.getElementById("chatForm");
+  let input = document.getElementById("chatInput");
+  let status;
+
+  if (!toggle || !panel || !messages || !form || !input) {
+    const widget = text("div", "chat-widget");
+    toggle = text("button", "chat-toggle", "اسألني");
+    toggle.id = "chatToggle";
+    toggle.type = "button";
+    panel = text("section", "chat-panel");
+    panel.id = "chatPanel";
+    panel.hidden = true;
+    panel.appendChild(text("div", "chat-head", "مساعد عبدالله"));
+    messages = text("div", "chat-messages");
+    messages.id = "chatMessages";
+    panel.appendChild(messages);
+    form = text("form", "chat-form");
+    form.id = "chatForm";
+    input = document.createElement("input");
+    input.id = "chatInput";
+    input.maxLength = 1000;
+    input.placeholder = "اسألني أي شيء...";
+    const send = text("button", "", "إرسال");
+    send.type = "submit";
+    form.append(input, send);
+    panel.appendChild(form);
+    widget.append(panel, toggle);
+    document.body.appendChild(widget);
+  }
+
+  // Remove any older FAQ-only submit handler already attached by a previous version.
+  const replacementForm = form.cloneNode(true);
+  form.replaceWith(replacementForm);
+  form = replacementForm;
+  input = form.querySelector("input");
   input.maxLength = 1000;
-  input.placeholder = "اكتب سؤالك...";
-  input.setAttribute("aria-label", "اكتب سؤالك");
-  const send = text("button", "", "إرسال");
-  send.type = "submit";
-  form.append(input, send);
-  panel.append(header, messages, notice, status, form);
-  widget.append(toggle, panel);
-  document.body.appendChild(widget);
+  input.placeholder = "اسألني أي شيء...";
+  input.setAttribute("aria-label", "اكتب رسالتك للمساعد");
+  const send = form.querySelector('button[type="submit"]') || form.querySelector("button");
+  status = panel.querySelector(".chat-status");
+  if (!status) {
+    status = text("div", "chat-status");
+    panel.insertBefore(status, form);
+  }
+  if (!panel.querySelector(".chat-notice")) {
+    panel.insertBefore(text("div", "chat-notice", "قد تُحفظ رسائلك لمراجعتها. لا ترسل معلومات حساسة."), status);
+  }
 
   const addMessage = (who, value) => {
-    messages.appendChild(text("div", `chat-message ${who}`, value));
+    const message = text("div", `chat-message ${who}`, value);
+    messages.appendChild(message);
     messages.scrollTop = messages.scrollHeight;
   };
-  addMessage("bot", "أهلًا! اسألني عن خدمات عبدالله أو مشاريعه أو طريقة التواصل.");
+  if (!messages.children.length) {
+    addMessage("bot", "أهلًا! أنا مساعد ذكي. اسألني أي شيء، وسأحاول مساعدتك.");
+  }
+
   toggle.addEventListener("click", () => {
     panel.hidden = !panel.hidden;
     toggle.setAttribute("aria-expanded", String(!panel.hidden));
     if (!panel.hidden) input.focus();
   });
 
-  function replyTo(question) {
-    const q = question.toLocaleLowerCase().replace(/[؟?!.،,]/g, " ");
-    if (/مشروع|المشاريع|اعمال|أعمال|portfolio|project/.test(q)) return "تقدر تشوف المشاريع المنشورة في قسم «المشاريع» بالموقع. إذا كان عندك سؤال عن مشروع محدد، اذكر اسمه.";
-    if (/خدمات|تطوير|موقع|website|service|web/.test(q)) return "عبدالله يعمل في تطوير المواقع وتجربة المستخدم، ويركز أيضًا على أساسيات الأمن السيبراني وحماية التطبيقات.";
-    if (/تواصل|اتصال|ايميل|إيميل|بريد|contact|email/.test(q)) return "انزل إلى قسم «التواصل» في الموقع واستخدم وسائل التواصل الموجودة هناك.";
-    if (/امن|أمن|سيبر|حماي|cyber|security/.test(q)) return "يركز عبدالله على مفاهيم الأمن السيبراني وتقييم الأمان وحماية الأنظمة والتطبيقات. أرسل تفاصيل استفسارك عبر قسم التواصل.";
-    if (/مرحبا|مرحب|اهلا|أهلا|سلام|hello|hi\b/.test(q)) return "أهلًا وسهلًا! كيف أقدر أساعدك؟ اسألني عن الخدمات أو المشاريع أو التواصل.";
-    return "ما عندي جواب دقيق لهذا السؤال الآن. اكتب تفاصيل أكثر أو تواصل مع عبدالله من قسم «التواصل» في الموقع.";
-  }
-
+  const history = [];
   let lastSentAt = 0;
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const question = input.value.trim();
-    if (!question || question.length > 1000) return;
-    const now = Date.now();
-    if (now - lastSentAt < 1200) return;
-    lastSentAt = now;
+    if (!question || question.length > 1000 || send?.disabled) return;
+    if (Date.now() - lastSentAt < 1000) return;
+    lastSentAt = Date.now();
     input.value = "";
     addMessage("visitor", question);
-    const answer = replyTo(question);
-    addMessage("bot", answer);
-    status.textContent = "";
-    if (!client) return;
-    const { error } = await client.from("chat_inquiries").insert({ visitor_id: visitorId, question, answer });
-    if (error) status.textContent = "تعذر حفظ المحادثة. شغّل supabase/chatbot.sql في Supabase.";
+    if (!client) {
+      addMessage("bot", "المساعد غير جاهز حاليًا. يرجى المحاولة لاحقًا.");
+      return;
+    }
+
+    send.disabled = true;
+    status.textContent = "جارٍ تجهيز الرد...";
+    try {
+      const { data, error } = await client.functions.invoke("chat", {
+        body: { question, history: history.slice(-10) }
+      });
+      if (error) throw error;
+      const answer = typeof data?.answer === "string" && data.answer.trim()
+        ? data.answer.trim()
+        : "لم أتمكن من تجهيز رد مناسب. جرّب صياغة السؤال بطريقة أخرى.";
+      history.push({ role: "user", text: question }, { role: "model", text: answer });
+      addMessage("bot", answer);
+      status.textContent = "";
+      const { error: saveError } = await client.from("chat_inquiries").insert({ visitor_id: visitorId, question, answer });
+      if (saveError) status.textContent = "الرد يعمل، لكن لم يُحفظ السجل. شغّل supabase/chatbot.sql في Supabase.";
+    } catch (error) {
+      console.error("Chat assistant error:", error);
+      addMessage("bot", "تعذر الوصول للمساعد الآن. تأكد من نشر دالة الذكاء الاصطناعي وإعداد Gemini API key في Supabase.");
+      status.textContent = "";
+    } finally {
+      send.disabled = false;
+      input.focus();
+    }
   });
 
   function addAdminTranscript() {
@@ -104,12 +145,19 @@
     const load = async () => {
       message.textContent = "جارٍ تحميل المحادثات...";
       list.replaceChildren();
-      const { data, error } = await client.from("chat_inquiries").select("question,answer,created_at").order("created_at", { ascending: false }).limit(100);
-      if (error) { message.textContent = "تعذر تحميلها. تأكد من تشغيل supabase/chatbot.sql في Supabase."; return; }
+      const { data, error } = await client.from("chat_inquiries")
+        .select("question,answer,created_at")
+        .order("created_at", { ascending: false })
+        .limit(100);
+      if (error) { message.textContent = "تعذر تحميلها. شغّل supabase/chatbot.sql في Supabase."; return; }
       message.textContent = data.length ? `آخر ${data.length} استفسارًا` : "لا توجد محادثات بعد.";
       for (const item of data) {
         const entry = text("article", "chat-log-entry");
-        entry.append(text("time", "", new Date(item.created_at).toLocaleString()), text("p", "", `الزائر: ${item.question}`), text("p", "", `البوت: ${item.answer}`));
+        entry.append(
+          text("time", "", new Date(item.created_at).toLocaleString()),
+          text("p", "", `الزائر: ${item.question}`),
+          text("p", "", `المساعد: ${item.answer}`)
+        );
         list.appendChild(entry);
       }
     };
