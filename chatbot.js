@@ -1,10 +1,12 @@
 (() => {
+  // Render the widget even if Supabase is unavailable; FAQ replies work locally.
   const url = window.SUPABASE_URL;
   const key = window.SUPABASE_ANON_KEY;
   const supabaseLib = window.supabase;
-  if (!supabaseLib || !url || !key || url.startsWith("YOUR_") || key.startsWith("YOUR_")) return;
+  const client = supabaseLib && url && key && !url.startsWith("YOUR_") && !key.startsWith("YOUR_")
+    ? supabaseLib.createClient(url, key)
+    : null;
 
-  const client = supabaseLib.createClient(url, key);
   const text = (tag, className, value) => {
     const node = document.createElement(tag);
     if (className) node.className = className;
@@ -12,13 +14,15 @@
     return node;
   };
   const visitorId = (() => {
-    const storageKey = "abdullahChatVisitorId";
-    let id = localStorage.getItem(storageKey);
-    if (!id) {
-      id = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-      localStorage.setItem(storageKey, id);
-    }
-    return id;
+    try {
+      const storageKey = "abdullahChatVisitorId";
+      let id = localStorage.getItem(storageKey);
+      if (!id) {
+        id = globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+        localStorage.setItem(storageKey, id);
+      }
+      return id;
+    } catch { return `${Date.now()}-${Math.random().toString(36).slice(2)}`; }
   })();
 
   const widget = text("div", "chat-widget");
@@ -80,13 +84,14 @@
     const answer = replyTo(question);
     addMessage("bot", answer);
     status.textContent = "";
+    if (!client) return;
     const { error } = await client.from("chat_inquiries").insert({ visitor_id: visitorId, question, answer });
-    if (error) status.textContent = "تعذر حفظ المحادثة. شغّل إعداد قاعدة بيانات البوت من ملف supabase/chatbot.sql.";
+    if (error) status.textContent = "تعذر حفظ المحادثة. شغّل supabase/chatbot.sql في Supabase.";
   });
 
   function addAdminTranscript() {
     const dashboard = document.getElementById("dashboardPanel");
-    if (!dashboard || document.getElementById("chatAdminTranscript")) return;
+    if (!dashboard || !client || document.getElementById("chatAdminTranscript")) return;
     const section = text("section", "chat-admin");
     section.id = "chatAdminTranscript";
     section.appendChild(text("h4", "", "استفسارات الزوار مع البوت"));
@@ -96,23 +101,15 @@
     const message = text("p", "chat-status");
     section.append(refresh, message, list);
     dashboard.appendChild(section);
-
     const load = async () => {
       message.textContent = "جارٍ تحميل المحادثات...";
       list.replaceChildren();
-      const { data, error } = await client.from("chat_inquiries")
-        .select("question,answer,created_at")
-        .order("created_at", { ascending: false })
-        .limit(100);
-      if (error) {
-        message.textContent = "تعذر تحميلها. تأكد من تشغيل supabase/chatbot.sql في Supabase.";
-        return;
-      }
+      const { data, error } = await client.from("chat_inquiries").select("question,answer,created_at").order("created_at", { ascending: false }).limit(100);
+      if (error) { message.textContent = "تعذر تحميلها. تأكد من تشغيل supabase/chatbot.sql في Supabase."; return; }
       message.textContent = data.length ? `آخر ${data.length} استفسارًا` : "لا توجد محادثات بعد.";
       for (const item of data) {
         const entry = text("article", "chat-log-entry");
-        const date = text("time", "", new Date(item.created_at).toLocaleString());
-        entry.append(date, text("p", "", `الزائر: ${item.question}`), text("p", "", `البوت: ${item.answer}`));
+        entry.append(text("time", "", new Date(item.created_at).toLocaleString()), text("p", "", `الزائر: ${item.question}`), text("p", "", `البوت: ${item.answer}`));
         list.appendChild(entry);
       }
     };
@@ -120,14 +117,14 @@
     load();
   }
 
-  client.auth.getSession().then(({ data }) => {
-    if (data.session) addAdminTranscript();
-  });
-  client.auth.onAuthStateChange((_event, session) => {
-    if (session) addAdminTranscript();
-    else document.getElementById("chatAdminTranscript")?.remove();
-  });
-  document.getElementById("adminToggle")?.addEventListener("click", () => {
-    if (client.auth.getSession) client.auth.getSession().then(({ data }) => { if (data.session) addAdminTranscript(); });
-  });
+  if (client) {
+    client.auth.getSession().then(({ data }) => { if (data.session) addAdminTranscript(); });
+    client.auth.onAuthStateChange((_event, session) => {
+      if (session) addAdminTranscript();
+      else document.getElementById("chatAdminTranscript")?.remove();
+    });
+    document.getElementById("adminToggle")?.addEventListener("click", () => {
+      client.auth.getSession().then(({ data }) => { if (data.session) addAdminTranscript(); });
+    });
+  }
 })();
