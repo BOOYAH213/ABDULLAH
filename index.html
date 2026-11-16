@@ -9,6 +9,92 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
+    <style>
+      .chat-widget {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        z-index: 9999;
+        direction: rtl;
+        font-family: "Cairo", sans-serif;
+      }
+      .chat-toggle {
+        border: none;
+        border-radius: 50px;
+        background: linear-gradient(135deg, #35d7b8, #70a7ff);
+        color: #041219;
+        padding: 14px 22px;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      }
+      .chat-panel {
+        position: absolute;
+        right: 0;
+        bottom: 70px;
+        width: min(360px, calc(100vw - 32px));
+        min-height: 420px;
+        background: rgba(8,12,20,0.98);
+        border: 1px solid rgba(120,141,170,.27);
+        border-radius: 18px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 20px 60px rgba(0,0,0,.45);
+      }
+      .chat-panel[hidden] { display: none; }
+      .chat-head {
+        background: rgba(255,255,255,.03);
+        border-bottom: 1px solid rgba(120,141,170,.27);
+        padding: 14px 16px;
+        font-weight: 800;
+      }
+      .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .chat-message {
+        max-width: 85%;
+        padding: 10px 12px;
+        border-radius: 12px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .chat-message.bot {
+        align-self: flex-start;
+        background: rgba(255,255,255,.05);
+      }
+      .chat-message.visitor {
+        align-self: flex-end;
+        background: #35d7b8;
+        color: #041219;
+      }
+      .chat-form {
+        display: flex;
+        gap: 8px;
+        padding: 10px;
+        border-top: 1px solid rgba(120,141,170,.27);
+      }
+      .chat-form input {
+        flex: 1;
+        margin: 0;
+        min-width: 0;
+      }
+      .chat-form button {
+        border: none;
+        background: #35d7b8;
+        color: #041219;
+        border-radius: 10px;
+        padding: 0 14px;
+        cursor: pointer;
+        font-weight: 800;
+      }
+    </style>
   </head>
   <body data-lang="ar">
     <div class="noise"></div>
@@ -21,35 +107,182 @@
         <div class="nav-actions"><button id="langToggle" class="lang-btn" type="button">AR / EN</button><button id="adminToggle" class="admin-btn" type="button" data-i18n="navAdmin">لوحة التحكم</button></div>
       </div>
     </header>
+
     <main>
-      <section class="hero section"><div class="container hero-grid">
-        <div class="hero-copy">
-          <p class="eyebrow" data-i18n="heroTag">الأمن السيبراني • تطوير المواقع</p>
-          <h1><span data-i18n="heroName">عبدالله</span><span class="accent" data-i18n="heroRole">Cybersecurity & Web Developer</span></h1>
-          <p class="hero-text" data-i18n="heroText">أعمل على بناء تجارب رقمية آمنة، فعّالة، واحترافية من خلال دمج الأمن السيبراني مع تصميم المواقع وتطوير الحلول التقنية.</p>
-          <div class="cta-row"><a href="#projects" class="btn btn-primary" data-i18n="viewProjects">استعراض المشاريع</a><a href="#contact" class="btn btn-secondary" data-i18n="contactMe">تواصل معي</a></div>
-          <div class="stats">
-            <div class="stat-card"><strong>01</strong><span data-i18n="statFocus">تركيز على الحماية</span></div>
-            <div class="stat-card"><strong>Web</strong><span data-i18n="statDevelopment">تطوير المواقع</span></div>
-            <div class="stat-card"><strong>AR/EN</strong><span data-i18n="statBilingual">موقع بلغتين</span></div>
+      <section class="hero section">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow" data-i18n="heroTag">الأمن السيبراني • تطوير المواقع</p>
+            <h1><span data-i18n="heroName">عبدالله</span><span class="accent" data-i18n="heroRole">Cybersecurity & Web Developer</span></h1>
+            <p class="hero-text" data-i18n="heroText">أعمل على بناء تجارب رقمية آمنة، فعّالة، واحترافية من خلال دمج الأمن السيبراني مع تصميم المواقع وتطوير الحلول التقنية.</p>
+            <div class="cta-row">
+              <a href="#projects" class="btn btn-primary" data-i18n="viewProjects">استعراض المشاريع</a>
+              <a href="#contact" class="btn btn-secondary" data-i18n="contactMe">تواصل معي</a>
+            </div>
+            <div class="stats">
+              <div class="stat-card"><strong>AR/EN</strong><span data-i18n="statBilingual">موقع بلغتين</span></div>
+              <div class="stat-card"><strong>Web</strong><span data-i18n="statDevelopment">تطوير المواقع</span></div>
+              <div class="stat-card"><strong>01</strong><span data-i18n="statFocus">تركيز على الحماية</span></div>
+            </div>
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <div class="orb orb-one"></div>
+            <div class="orb orb-two"></div>
+            <div class="terminal-card">
+              <div class="terminal-head"><span></span><span></span><span></span></div>
+              <div class="terminal-body">
+                <div class="prompt">$-abdullah@portfolio</div>
+                <div>secure.dev --status</div>
+                <div class="success">Threat Monitoring [OK]</div>
+                <div class="success">Web Protection [OK]</div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="hero-visual" aria-hidden="true"><div class="orb orb-one"></div><div class="orb orb-two"></div><div class="terminal-card"><div class="terminal-head"><span></span><span></span><span></span></div><div class="terminal-body"><p class="prompt">abdullah@portfolio:~$</p><p>secure.dev --status</p><p class="success">[OK] Threat Monitoring</p><p class="success">[OK] Web Protection</p><p class="success">[OK] Secure Frontend</p></div></div></div>
-      </div></section>
-      <section id="about" class="section about"><div class="container split-layout"><div class="section-header"><p class="eyebrow" data-i18n="aboutEyebrow">من أنا</p><h2 data-i18n="aboutTitle">مطور مواقع وأمن سيبراني</h2></div><div class="about-content"><p data-i18n="aboutText1">أنا عبدالله، أعمل على الدمج بين الأمن السيبراني وتطوير الواجهات الرقمية لبناء منصات آمنة وسريعة ومريحة للمستخدم.</p><p data-i18n="aboutText2">أركز على حماية الأنظمة، تطوير المواقع، وتحسين تجربة المستخدم من خلال حلول تقنية فعالة ومتقدمة.</p></div></div></section>
-      <section id="skills" class="section skills"><div class="container"><div class="section-header center"><p class="eyebrow" data-i18n="skillsEyebrow">المهارات</p><h2 data-i18n="skillsTitle">ما الذي أقدمه؟</h2></div><div class="skill-grid">
-        <article class="skill-card"><div class="icon">01</div><h3 data-i18n="skill1Title">الأمن السيبراني</h3><p data-i18n="skill1Text">مفاهيم الأمن السيبراني، تقييم الأمان، وحماية الأنظمة والتطبيقات.</p></article>
-        <article class="skill-card"><div class="icon">02</div><h3 data-i18n="skill2Title">تطوير المواقع</h3><p data-i18n="skill2Text">تصميم مواقع حديثة وتطبيقات ويب سريعة وقابلة للتطوير.</p></article>
-        <article class="skill-card"><div class="icon">03</div><h3 data-i18n="skill3Title">تجربة المستخدم</h3><p data-i18n="skill3Text">واجهة مستخدم واضحة، احترافية، ومتجاوبة مع مختلف الأجهزة.</p></article>
-        <article class="skill-card"><div class="icon">04</div><h3 data-i18n="skill4Title">الأداء والتحسين</h3><p data-i18n="skill4Text">تحسين سرعة الموقع، تجربة المستخدم، واستقرار الأنظمة.</p></article>
-      </div></div></section>
-      <section id="projects" class="section projects"><div class="container"><div class="section-header center"><p class="eyebrow" data-i18n="projectsEyebrow">المشاريع</p><h2 data-i18n="projectsTitle">أحدث الأعمال</h2></div><div id="projectGrid" class="project-grid" aria-live="polite"></div></div></section>
-      <section id="contact" class="section contact"><div class="container contact-box"><div><p class="eyebrow" data-i18n="contactEyebrow">تواصل</p><h2 data-i18n="contactTitle">للتعاون أو الاستفسار</h2></div><div class="contact-links"><a href="https://www.instagram.com/apood_we" target="_blank" rel="noopener noreferrer">Instagram: @apood_we</a></div></div></section>
+      </section>
+
+      <section id="about" class="section about">
+        <div class="container split-layout">
+          <div class="section-header">
+            <p class="eyebrow" data-i18n="aboutEyebrow">من أنا</p>
+            <h2 data-i18n="aboutTitle">مطور مواقع وأمن سيبراني</h2>
+          </div>
+          <div class="about-content">
+            <p data-i18n="aboutText1">أنا عبدالله، أعمل على دمج الأمن السيبراني مع تطوير الواجهات الرقمية لتقديم مواقع آمنة وسريعة وتجربة مستخدم احترافية.</p>
+            <p data-i18n="aboutText2">أركز على حماية الأنظمة، تطوير المواقع، وتحسين تجربة المستخدم من خلال حلول تقنية فعالة ومتقدمة.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="skills" class="section skills">
+        <div class="container">
+          <div class="section-header center">
+            <p class="eyebrow" data-i18n="skillsEyebrow">المهارات</p>
+            <h2 data-i18n="skillsTitle">ما أقدمه</h2>
+          </div>
+          <div class="skill-grid">
+            <article class="skill-card"><div class="icon">01</div><h3 data-i18n="skill1Title">الأمن السيبراني</h3><p data-i18n="skill1Text">مفاهيم الأمن السيبراني، تقييم الأمان، وحماية الأنظمة والتطبيقات.</p></article>
+            <article class="skill-card"><div class="icon">02</div><h3 data-i18n="skill2Title">تطوير المواقع</h3><p data-i18n="skill2Text">تصميم مواقع حديثة وتطبيقات ويب متجاوبة ومتطورة.</p></article>
+            <article class="skill-card"><div class="icon">03</div><h3 data-i18n="skill3Title">تجربة المستخدم</h3><p data-i18n="skill3Text">واجهة مستخدم واضحة، احترافية، ومتجاوبة مع مختلف الأجهزة.</p></article>
+            <article class="skill-card"><div class="icon">04</div><h3 data-i18n="skill4Title">الأداء والتحسين</h3><p data-i18n="skill4Text">تحسين سرعة الموقع، تجربة المستخدم، وتفاعل الأجزاء بشكل أفضل.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects" class="section projects">
+        <div class="container">
+          <div class="section-header center">
+            <p class="eyebrow" data-i18n="projectsEyebrow">المشاريع</p>
+            <h2 data-i18n="projectsTitle">أحدث الأعمال</h2>
+          </div>
+          <div class="project-grid" id="projectGrid"></div>
+        </div>
+      </section>
+
+      <section id="contact" class="section contact">
+        <div class="container contact-box">
+          <div>
+            <p class="eyebrow" data-i18n="contactEyebrow">تواصل</p>
+            <h2 data-i18n="contactTitle">للتعاون أو الاستفسار</h2>
+          </div>
+          <div class="contact-links">
+            <a href="mailto:your@email.com">Email</a>
+            <a href="https://wa.me/966500000000" target="_blank" rel="noreferrer">WhatsApp</a>
+            <a href="https://github.com/BOOYAH213" target="_blank" rel="noreferrer">GitHub</a>
+          </div>
+        </div>
+      </section>
     </main>
-    <div id="adminModal" class="modal hidden" aria-hidden="true"><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="adminTitle"><div class="modal-header"><h3 id="adminTitle" data-i18n="adminTitle">لوحة التحكم</h3><button id="closeAdmin" class="close-btn" type="button" aria-label="Close" title="Close">×</button></div>
-      <div id="loginPanel" class="admin-panel"><label class="field-label" for="adminEmail" data-i18n="emailLabel">البريد الإلكتروني</label><input id="adminEmail" type="email" autocomplete="username" required /><label class="field-label" for="adminPassword" data-i18n="passwordLabel">كلمة المرور</label><input id="adminPassword" type="password" autocomplete="current-password" required /><button id="loginBtn" class="btn btn-primary" type="button" data-i18n="loginBtn">دخول</button><p id="authMessage" class="field-label" role="status"></p></div>
-      <div id="dashboardPanel" class="admin-panel hidden"><form id="projectForm"><div class="field-row"><div><label class="field-label" for="projectTitle" data-i18n="projectTitleLabel">عنوان المشروع</label><input id="projectTitle" type="text" maxlength="120" required /></div><div><label class="field-label" for="projectCategory" data-i18n="projectCategoryLabel">الفئة</label><input id="projectCategory" type="text" maxlength="80" required /></div></div><div class="field-row"><div><label class="field-label" for="projectImage" data-i18n="projectImageLabel">رابط الصورة</label><input id="projectImage" type="url" placeholder="https://..." /></div><div><label class="field-label" for="projectLink" data-i18n="projectLinkLabel">رابط المشروع</label><input id="projectLink" type="url" placeholder="https://..." /></div></div><label class="field-label" for="projectDesc" data-i18n="projectDescLabel">وصف المشروع</label><textarea id="projectDesc" rows="4" maxlength="2000" required></textarea><div class="form-actions"><button type="submit" class="btn btn-primary" data-i18n="saveProjectBtn">حفظ المشروع</button><button id="logoutBtn" type="button" class="btn btn-secondary" data-i18n="logoutBtn">تسجيل الخروج</button></div><p id="projectMessage" class="field-label" role="status"></p></form></div>
-    </div></div>
+
+    <div id="adminModal" class="modal hidden" aria-hidden="true">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
+        <div class="modal-header">
+          <h3 id="adminTitle" data-i18n="adminTitle">لوحة التحكم</h3>
+          <button id="closeAdmin" class="close-btn" type="button" aria-label="إغلاق">×</button>
+        </div>
+        <div id="loginPanel" class="admin-panel">
+          <label class="field-label" for="adminEmail" data-i18n="emailLabel">البريد الإلكتروني</label>
+          <input id="adminEmail" type="email" />
+          <label class="field-label" for="adminPassword" data-i18n="passwordLabel">كلمة المرور</label>
+          <input id="adminPassword" type="password" />
+          <div class="form-actions">
+            <button id="loginBtn" class="btn btn-primary" type="button" data-i18n="loginBtn">دخول</button>
+          </div>
+          <p id="authMessage" class="about-content"></p>
+        </div>
+        <div id="dashboardPanel" class="admin-panel hidden">
+          <form id="projectForm">
+            <div class="field-row">
+              <div><label class="field-label" for="projectTitle" data-i18n="projectTitleLabel">عنوان المشروع</label><input id="projectTitle" type="text" /></div>
+              <div><label class="field-label" for="projectCategory" data-i18n="projectCategoryLabel">الفئة</label><input id="projectCategory" type="text" /></div>
+            </div>
+            <label class="field-label" for="projectImage" data-i18n="projectImageLabel">رابط الصورة</label>
+            <input id="projectImage" type="url" />
+            <label class="field-label" for="projectLink" data-i18n="projectLinkLabel">رابط المشروع</label>
+            <input id="projectLink" type="url" />
+            <label class="field-label" for="projectDesc" data-i18n="projectDescLabel">الوصف</label>
+            <textarea id="projectDesc"></textarea>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" data-i18n="saveProject">حفظ</button>
+              <button id="logoutBtn" type="button" class="btn btn-secondary" data-i18n="logoutBtn">تسجيل الخروج</button>
+            </div>
+          </form>
+          <p id="projectMessage" class="about-content"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-widget">
+      <div class="chat-panel" id="chatPanel" hidden>
+        <div class="chat-head">مساعد عبدالله</div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <form class="chat-form" id="chatForm">
+          <input id="chatInput" placeholder="اكتب سؤالك..." aria-label="اكتب سؤالك" />
+          <button type="submit">إرسال</button>
+        </form>
+      </div>
+      <button class="chat-toggle" id="chatToggle" type="button">اسألني</button>
+    </div>
+
+    <script>
+      const chatMessages = document.getElementById('chatMessages');
+      const chatPanel = document.getElementById('chatPanel');
+      const chatToggle = document.getElementById('chatToggle');
+      const chatForm = document.getElementById('chatForm');
+      const chatInput = document.getElementById('chatInput');
+
+      function addChatMessage(who, text) {
+        const node = document.createElement('div');
+        node.className = 'chat-message ' + who;
+        node.textContent = text;
+        chatMessages.appendChild(node);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      function reply(question) {
+        const q = question.toLowerCase().replace(/[؟?!.،,]/g, ' ');
+        if (/مشروع|المشاريع|اعمال|أعمال|portfolio|project/.test(q)) return 'تقدر تشوف المشاريع المنشورة في قسم «المشاريع» بالموقع.';
+        if (/خدمات|تطوير|موقع|website|service|web/.test(q)) return 'عبدالله يعمل في تطوير المواقع وتجربة المستخدم، ويركز أيضًا على الأمن السيبراني.';
+        if (/تواصل|اتصال|ايميل|إيميل|بريد|contact|email/.test(q)) return 'انزل إلى قسم «التواصل» في الموقع واستخدم وسائل التواصل الموجودة هناك.';
+        if (/امن|أمن|سيبر|حماي|cyber|security/.test(q)) return 'يركز عبدالله على الأمن السيبراني وتقييم الأمان وحماية الأنظمة والتطبيقات.';
+        if (/مرحبا|مرحب|اهلا|أهلا|سلام|hello|hi\b/.test(q)) return 'أهلًا وسهلًا! كيف أقدر أساعدك؟';
+        return 'ما عندي جواب دقيق لهذا السؤال الآن. اكتب تفاصيل أكثر أو تواصل مع عبدالله من قسم «التواصل».';
+      }
+
+      addChatMessage('bot', 'أهلًا! اسألني عن خدمات عبدالله أو مشاريعه أو طريقة التواصل.');
+      chatToggle.addEventListener('click', () => {
+        chatPanel.hidden = !chatPanel.hidden;
+      });
+      chatForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const value = chatInput.value.trim();
+        if (!value) return;
+        addChatMessage('visitor', value);
+        addChatMessage('bot', reply(value));
+        chatInput.value = '';
+      });
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
     <script src="script.js"></script>
