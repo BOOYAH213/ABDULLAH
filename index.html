@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Abdullah portfolio - cybersecurity expert and web developer focused on secure digital experiences."
+    />
+    <title>Abdullah | Cybersecurity & Web Development</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-lang="ar">
+    <div class="noise"></div>
+
+    <header class="topbar">
+      <div class="container nav-wrap">
+        <div class="brand" aria-label="Abdullah brand">
+          <span class="brand-mark">A</span>
+          <span class="brand-name">Abdullah</span>
+        </div>
+
+        <nav class="nav" aria-label="Main navigation">
+          <a href="#about" data-i18n="navAbout">من أنا</a>
+          <a href="#skills" data-i18n="navSkills">المهارات</a>
+          <a href="#projects" data-i18n="navProjects">المشاريع</a>
+          <a href="#contact" data-i18n="navContact">التواصل</a>
+        </nav>
+
+        <div class="nav-actions">
+          <button id="langToggle" class="lang-btn" type="button">AR / EN</button>
+          <button id="adminToggle" class="admin-btn" type="button" data-i18n="navAdmin">لوحة التحكم</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero section">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow" data-i18n="heroTag">الأمن السيبراني • تطوير المواقع</p>
+            <h1>
+              <span data-i18n="heroName">عبدالله</span>
+              <span class="accent" data-i18n="heroRole">Cybersecurity & Web Developer</span>
+            </h1>
+            <p class="hero-text" data-i18n="heroText">
+              أعمل على بناء تجارب رقمية آمنة، فعّالة، واحترافية من خلال دمج الأمن السيبراني
+              مع تصميم المواقع وتطوير الحلول التقنية.
+            </p>
+            <div class="cta-row">
+              <a href="#projects" class="btn btn-primary" data-i18n="viewProjects">استعراض المشاريع</a>
+              <a href="#contact" class="btn btn-secondary" data-i18n="contactMe">تواصل معي</a>
+            </div>
+            <div class="stats">
+              <div class="stat-card">
+                <strong>3+</strong>
+                <span data-i18n="statExperience">سنوات خبرة</span>
+              </div>
+              <div class="stat-card">
+                <strong>12+</strong>
+                <span data-i18n="statProjects">مشاريع</span>
+              </div>
+              <div class="stat-card">
+                <strong>24/7</strong>
+                <span data-i18n="statFocus">تركيز على الحماية</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-visual" aria-hidden="true">
+            <div class="orb orb-one"></div>
+            <div class="orb orb-two"></div>
+            <div class="terminal-card">
+              <div class="terminal-head">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="terminal-body">
+                <p class="prompt">root@abdullah:~$</p>
+                <p>secure.dev --status</p>
+                <p class="success">[OK] Threat Monitoring</p>
+                <p class="success">[OK] Web Protection</p>
+                <p class="success">[OK] Secure Frontend</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="section about">
+        <div class="container split-layout">
+          <div class="section-header">
+            <p class="eyebrow" data-i18n="aboutEyebrow">من أنا</p>
+            <h2 data-i18n="aboutTitle">مطور مواقع وأمن سيبراني</h2>
+          </div>
+
+          <div class="about-content">
+            <p data-i18n="aboutText1">
+              أنا عبدالله، أعمل على الدمج بين الأمن السيبراني وتطوير الواجهات الرقمية لبناء
+              منصات آمنة وسريعة ومريحة للمستخدم.
+            </p>
+            <p data-i18n="aboutText2">
+              أركز على حماية الأنظمة، تطوير المواقع، وتحسين تجربة المستخدم من خلال حلول تقنية
+              فعالة ومتقدمة.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="skills" class="section skills">
+        <div class="container">
+          <div class="section-header center">
+            <p class="eyebrow" data-i18n="skillsEyebrow">المهارات</p>
+            <h2 data-i18n="skillsTitle">ما الذي أقدمه؟</h2>
+          </div>
+
+          <div class="skill-grid">
+            <article class="skill-card">
+              <div class="icon">01</div>
+              <h3 data-i18n="skill1Title">الأمن السيبراني</h3>
+              <p data-i18n="skill1Text">تحليل الثغرات، تقييم الأمان، حماية الأنظمة والتطبيقات.</p>
+            </article>
+
+            <article class="skill-card">
+              <div class="icon">02</div>
+              <h3 data-i18n="skill2Title">تطوير المواقع</h3>
+              <p data-i18n="skill2Text">تصميم مواقع حديثة وتطبيقات ويب سريعة وقابلة للتطوير.</p>
+            </article>
+
+            <article class="skill-card">
+              <div class="icon">03</div>
+              <h3 data-i18n="skill3Title">تجربة المستخدم</h3>
+              <p data-i18n="skill3Text">واجهة مستخدم واضحة، احترافية، ومتجاوبة مع مختلف الأجهزة.</p>
+            </article>
+
+            <article class="skill-card">
+              <div class="icon">04</div>
+              <h3 data-i18n="skill4Title">الأداء والتحسين</h3>
+              <p data-i18n="skill4Text">تحسين سرعة الموقع، تجربة المستخدم، واستقرار الأنظمة.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects" class="section projects">
+        <div class="container">
+          <div class="section-header center">
+            <p class="eyebrow" data-i18n="projectsEyebrow">المشاريع</p>
+            <h2 data-i18n="projectsTitle">أحدث الأعمال</h2>
+          </div>
+
+          <div id="projectGrid" class="project-grid" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section id="contact" class="section contact">
+        <div class="container contact-box">
+          <div>
+            <p class="eyebrow" data-i18n="contactEyebrow">تواصل</p>
+            <h2 data-i18n="contactTitle">للتعاون أو الاستفسار</h2>
+          </div>
+
+          <div class="contact-links">
+            <a href="https://www.instagram.com/apood_we" target="_blank" rel="noreferrer">Instagram: @apood_we</a>
+            <a href="mailto:abdullah@example.com">Email: abdullah@example.com</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="adminModal" class="modal hidden" aria-hidden="true">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 data-i18n="adminTitle">لوحة التحكم</h3>
+          <button id="closeAdmin" class="close-btn" type="button" aria-label="Close" title="Close">×</button>
+        </div>
+
+        <div id="loginPanel" class="admin-panel">
+          <label class="field-label" for="adminPassword" data-i18n="passwordLabel">كلمة المرور</label>
+          <input id="adminPassword" type="password" placeholder="••••••••" />
+          <button id="loginBtn" class="btn btn-primary" type="button" data-i18n="loginBtn">دخول</button>
+        </div>
+
+        <div id="dashboardPanel" class="admin-panel hidden">
+          <form id="projectForm">
+            <div class="field-row">
+              <div>
+                <label class="field-label" for="projectTitle" data-i18n="projectTitleLabel">عنوان المشروع</label>
+                <input id="projectTitle" type="text" required />
+              </div>
+              <div>
+                <label class="field-label" for="projectCategory" data-i18n="projectCategoryLabel">الفئة</label>
+                <input id="projectCategory" type="text" required />
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div>
+                <label class="field-label" for="projectImage" data-i18n="projectImageLabel">رابط الصورة</label>
+                <input id="projectImage" type="url" placeholder="https://..." />
+              </div>
+              <div>
+                <label class="field-label" for="projectLink" data-i18n="projectLinkLabel">رابط المشروع</label>
+                <input id="projectLink" type="url" placeholder="https://..." />
+              </div>
+            </div>
+
+            <label class="field-label" for="projectDesc" data-i18n="projectDescLabel">وصف المشروع</label>
+            <textarea id="projectDesc" rows="4" required></textarea>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" data-i18n="saveProjectBtn">حفظ المشروع</button>
+              <button id="logoutBtn" type="button" class="btn btn-secondary" data-i18n="logoutBtn">تسجيل الخروج</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
