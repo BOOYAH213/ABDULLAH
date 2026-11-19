@@ -57,6 +57,11 @@
     document.body.appendChild(widget);
   }
 
+  // Detach the old FAQ-only click handler embedded in index.html.
+  const replacementToggle = toggle.cloneNode(true);
+  toggle.replaceWith(replacementToggle);
+  toggle = replacementToggle;
+
   // Remove any older FAQ-only submit handler already attached by a previous version.
   const replacementForm = form.cloneNode(true);
   form.replaceWith(replacementForm);
